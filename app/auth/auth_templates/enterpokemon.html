@@ -7,21 +7,28 @@
             {{ form.pokemon(class= 'form-control', placeholder="Enter Pokemon") }}
             {{ form.submit(class='btn btn-primary', placeholder="submit") }}
 
-            
+
         </form>
     </div>
 </div>
 
 <div class="container">
     <div class="row justify-content-center">
-        
-{% if poke %}
+
+        {% if poke %}
         <div class="card" style="width: 18rem;">
             <img src="{{poke.sprite}}" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">{{poke}}</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
+                <h4 class="card-title">{{poke.species}}</h4>
+                <p class="card-text">
+
+                <H6>Ability: {{poke.ability}}</H6>
+                <h6>Base Experience: {{poke.base_exp}}</h6>
+                <h6>Attack: {{poke.attack}}</h6>
+                <h6>Defense: {{poke.defense}}</h6>
+                <h6>Base HP: {{poke.hp}}</h6>
+                
+                </p>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
         </div>
