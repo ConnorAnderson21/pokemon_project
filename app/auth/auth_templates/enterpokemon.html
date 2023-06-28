@@ -1,9 +1,12 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="container">
+
+<div id="pokesearch" class="container">
     <div class="row justify-content-center">
         <form method="POST" class="col-5">
+
+
             {{ form.pokemon(class= 'form-control', placeholder="Enter Pokemon") }}
             {{ form.submit(class='btn btn-primary', placeholder="submit") }}
 
@@ -16,10 +19,10 @@
     <div class="row justify-content-center">
 
         {% if poke %}
-        <div class="card" style="width: 18rem;">
+        <div id="pokecard" class="card" style="width: 18rem;">
             <img src="{{poke.sprite}}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h4 class="card-title">{{poke.species}}</h4>
+            <div id="pokeinfo" class="card-body">
+                <h4 class="card-title">{{poke.species.capitalize()}}</h4>
                 <p class="card-text">
 
                 <H6>Ability: {{poke.ability}}</H6>
@@ -29,7 +32,7 @@
                 <h6>Base HP: {{poke.hp}}</h6>
                 
                 </p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <a href="#" class="btn btn-primary">Use Poke Ball!</a>
             </div>
         </div>
         {% endif %}

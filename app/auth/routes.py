@@ -1,12 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 
-from .forms import PokeName
+from .forms import PokeName, SignupForm, LoginForm
+from ..models import User
 
 import requests, json
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
-
-
 
 
 @auth.route('/enterpokemon', methods=['GET', 'POST'])
@@ -33,9 +32,36 @@ def enterpokemon():
                 return pokeinfo
         poke = poke_data(pokemon)
         print(poke)
+        flash(f'Wild {pokemon.capitalize()} Appeared!')        
         return render_template('enterpokemon.html', form=form, poke=poke)
+    # flash(f'Wild {pokemon} Appeared!')
     return render_template('enterpokemon.html', form=form)
 
+@auth.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+    if request.method == 'POST':
+        if form.validate():
+            username = form.username.data
+            email = form.email.data
+            password = form.password.data
+
+            user = User(username, email, password)
+            user.save_user()
+            return redirect(url_for('auth.login'))
+
+
+
+    return render_template('signup.html', form=form)
 
     
- 
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if request.method == 'POST':
+        if form.validate():
+            username = form.username.data
+            password = form.password.data
+
+
+    return render_template('login.html', form=form)
