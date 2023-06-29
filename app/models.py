@@ -17,4 +17,4 @@ class User(db.Model, UserMixin):
 
     def save_user(self):
         db.session.add(self)
-        db.session.commit
+        db.session.commit()
