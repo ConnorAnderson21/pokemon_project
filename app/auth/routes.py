@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
 from .forms import PokeName, SignupForm, LoginForm
-from ..models import User
+from ..models import User, Pokemon
 
 import requests, json
 
@@ -11,11 +11,16 @@ auth = Blueprint('auth', __name__, template_folder='auth_templates')
 @auth.route('/enterpokemon', methods=['GET', 'POST'])
 def enterpokemon():
     form = PokeName()
-    # print(request.method)
+    print(request.method)
     if request.method == 'POST':
-
         pokemon = form.pokemon.data
         print(pokemon)
+        poke = Pokemon.query.filter_by(name=pokemon).first()
+        if poke:
+            flash(f'Wild {pokemon.capitalize()} Appeared!')
+            return render_template('enterpokemon.html', form=form, poke=poke)
+        
+
         def poke_data(pokename):
             response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokename}")
             print(response)
@@ -32,6 +37,19 @@ def enterpokemon():
                 return pokeinfo
         poke = poke_data(pokemon)
         print(poke)
+        new_pokemon = Pokemon(
+            name=poke['species'],
+            ability=poke['ability'],
+            base_experience=poke['base_exp'],
+            sprite=poke['sprite'],
+            attack=poke['attack'],
+            defense=poke['defense'],
+            hp=poke['hp']
+        )
+        new_pokemon.save_pokemon()
+        # save_pokemon(new_pokemon)
+
+
         flash(f'Wild {pokemon.capitalize()} Appeared!')        
         return render_template('enterpokemon.html', form=form, poke=poke)
     # flash(f'Wild {pokemon} Appeared!')
@@ -65,3 +83,9 @@ def login():
 
 
     return render_template('login.html', form=form)
+
+
+# catch release routeslike unlike follow unfollow
+
+
+# battle query all users use new html button feedback win loss column
