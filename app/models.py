@@ -4,13 +4,24 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-# add join table is for catch
+
+catch_poke = db.Table(
+    'catch_poke',
+    db.Column('user', db.Integer, db.ForeignKey('User.id'), nullable=False),
+    db.Column('pokemon', db.Integer, db.ForeignKey('Pokemon.id'), nullable=False))
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
+
+    caught_poke = db.relationship('Pokemon', 
+        secondary = 'catch_poke',
+        backref = 'caught_poke',
+        lazy = 'dynamic'
+            )                      
+
 
     def __init__(self,username, email, password):
         self.username = username
@@ -20,6 +31,17 @@ class User(db.Model, UserMixin):
     def save_user(self):
         db.session.add(self)
         db.session.commit()
+
+    def catch_it(self, pokemon):
+        self.caught_poke.append(pokemon)
+        db.session.commit()
+
+    def release_it(self, pokemon):
+        self.caught_poke.remove(pokemon)
+        db.session.commit()
+
+
+
 
 class Pokemon (db.Model):
     id = db.Column(db.Integer, primary_key=True)

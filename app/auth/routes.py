@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
+from flask_login import current_user, login_user, logout_user
+from werkzeug.security import check_password_hash
+
 from .forms import PokeName, SignupForm, LoginForm
 from ..models import User, Pokemon
 
@@ -40,7 +43,7 @@ def enterpokemon():
         new_pokemon = Pokemon(
             name=poke['species'],
             ability=poke['ability'],
-            base_experience=poke['base_exp'],
+            base_exp=poke['base_exp'],
             sprite=poke['sprite'],
             attack=poke['attack'],
             defense=poke['defense'],
@@ -54,6 +57,10 @@ def enterpokemon():
         return render_template('enterpokemon.html', form=form, poke=poke)
     # flash(f'Wild {pokemon} Appeared!')
     return render_template('enterpokemon.html', form=form)
+
+
+
+
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -82,9 +89,36 @@ def login():
             password = form.password.data
 
 
+            user = User.query.filter_by(username=username).first()
+            if user:
+                
+                if check_password_hash(user.password, password):
+                    flash('You are logged in', 'success')
+                    login_user(user)
+                    return redirect(url_for('team'))
+                else:
+                    flash('Invalid Password', 'danger')
+            else:
+                flash('User not found', 'warning')
+
+
     return render_template('login.html', form=form)
 
+@auth.route('/logout')
+def logout():
+    flash('you\'re logged out', 'secondary')
+    logout_user()
+    return redirect(url_for('login'))
 
+
+@auth.route('/catchpoke/<int:pokemon>', methods=['GET', 'POST'])
+# @login_required
+def add_to_team():
+    my_poke = Pokemon.query.get(id) 
+    if my_poke not in current_user.catch_poke:
+        current_user.catch_it(my_poke)
+        
+    return redirect('/team/')
 # catch release routeslike unlike follow unfollow
 
 
