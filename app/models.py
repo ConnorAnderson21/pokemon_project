@@ -24,8 +24,8 @@ class User(db.Model, UserMixin):
         self.username = username
         self.email = email
         self.password = password
-        self.wins = 0
-        self.loses = 0
+        self.wins = wins
+        self.loses = loses
 
     def save_user(self):
         db.session.add(self)
