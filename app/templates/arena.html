@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% block content %}
+<h1>Battle Arena</h1>
+
+<div class="container">
+  <div class="row justify-content-center">
+      {% for train in trainer_list %}
+      {% if train != current_user %}
+      <div class="col-6">
+          <div id="trainercard" class="card mb-3">
+              <div class="card-header">
+                  <h5>Trainer: {{ train.username }}</h5>
+              </div>
+              <ul class="list-group list-group-flush">
+                  {% for pokemon in train.catch_poke %}
+                  <li class="list-group-item">{{ pokemon.name }}</li>
+                  {% endfor %}
+                  <form action="{{ url_for('auth.battle', user=train.id) }}" method="POST">
+                      <input type="hidden" value="{{ current_user.id }}">
+                      <button type="submit" class="btn btn-danger">BATTLE!</button>
+                  </form>
+              </ul>
+          </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+<!-- Iwant to diplay each raners team facing each other for battle 
+  but it was getting complicated and taking too much time -->
+

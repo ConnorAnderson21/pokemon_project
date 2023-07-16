@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash
 from .forms import PokeName, SignupForm, LoginForm
 from ..models import User, Pokemon
 
-import requests, json
+import requests, json, random
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
 
@@ -54,7 +54,7 @@ def enterpokemon():
 
 
         flash(f'Wild {pokemon.capitalize()} Appeared!')        
-        return render_template('enterpokemon.html', form=form, poke=poke)
+        return render_template('enterpokemon.html', form=form, poke=new_pokemon)
     # flash(f'Wild {pokemon} Appeared!')
     return render_template('enterpokemon.html', form=form)
 
@@ -92,7 +92,9 @@ def login():
             user = User.query.filter_by(username=username).first()
             if user:
                 
-                if check_password_hash(user.password, password):
+              
+                # if check_password_hash(user.password, password):
+                if user.password == password:
                     flash('You are logged in', 'success')
                     login_user(user)
                     return redirect(url_for('team'))
@@ -108,17 +110,66 @@ def login():
 def logout():
     flash('you\'re logged out', 'secondary')
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
 
 
-@auth.route('/catchpoke/<int:pokemon>', methods=['GET', 'POST'])
+@auth.route('/catchpoke/<int:pokemon>', methods=['GET'])
 # @login_required
-def add_to_team():
-    my_poke = Pokemon.query.get(id) 
-    if my_poke not in current_user.catch_poke:
+def add_to_team(pokemon):
+    my_poke = Pokemon.query.get(pokemon) 
+    print(my_poke)
+    print(current_user.caught_poke)
+    if my_poke in current_user.caught_poke:
+        flash('Pokemon Already Caught','danger')
+    elif len(current_user.caught_poke) == 6:
+        flash('User Team Is Full', 'danger')
+    else:
         current_user.catch_it(my_poke)
+        flash('Pokemon Was Caught')
+    return redirect(url_for('team'))
+
+@auth.route('/team')
+def team():
+    team_list = current_user.caught_poke
+    return render_template('team.html', team_list=team_list)
+
+
+@auth.route('/releasepoke<int:pokemon>', methods=['GET'])
+def release(pokemon):
+    my_poke = Pokemon.query.get(pokemon)
+    current_user.release_it(my_poke)
+    flash('Goodbye Pokemon')
+    return redirect(url_for('team'))
+
+@auth.route('/arena')
+def arena():
+    trainer_list = User.query.all()
+    
+    return render_template('arena.html',  trainer_list=trainer_list)
+
+
+
+
+# need to play with this then done
+@auth.route('/battle/<int:user>', methods=['GET', 'POST'])
+def battle(user):
+    opponent = User.query.get(user)
+    trainer = current_user
+    winner = random.choice([opponent, trainer])
+    loser = trainer if winner != opponent else opponent
+
+    winner.winning()
+    loser.losing()
+
+    return render_template('arena.html',winner=winner)
+
+
+
+    # add if statements
+    # if my_poke not in current_user.catch_poke:
+    #     current_user.catch_it(my_poke)
         
-    return redirect('/team/')
+    
 # catch release routeslike unlike follow unfollow
 
 

@@ -7,26 +7,25 @@ db = SQLAlchemy()
 
 catch_poke = db.Table(
     'catch_poke',
-    db.Column('user', db.Integer, db.ForeignKey('User.id'), nullable=False),
-    db.Column('pokemon', db.Integer, db.ForeignKey('Pokemon.id'), nullable=False))
+    db.Column('user', db.Integer, db.ForeignKey('user.id'), nullable=False),
+    db.Column('pokemon', db.Integer, db.ForeignKey('pokemon.id'), nullable=False))
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
+    wins = db.Column(db.Integer)
+    loses = db.Column(db.Integer)
 
-    caught_poke = db.relationship('Pokemon', 
-        secondary = 'catch_poke',
-        backref = 'caught_poke',
-        lazy = 'dynamic'
-            )                      
+    
 
-
-    def __init__(self,username, email, password):
+    def __init__(self,username, email, password, wins, loses):
         self.username = username
         self.email = email
         self.password = password
+        self.wins = 0
+        self.loses = 0
 
     def save_user(self):
         db.session.add(self)
@@ -38,6 +37,14 @@ class User(db.Model, UserMixin):
 
     def release_it(self, pokemon):
         self.caught_poke.remove(pokemon)
+        db.session.commit()
+
+    def winning(self):
+        self.wins += 1
+        db.session.commit()
+
+    def losing(self):
+        self.loses -= 1
         db.session.commit()
 
 
@@ -52,6 +59,13 @@ class Pokemon (db.Model):
     attack = db.Column(db.Integer, nullable=False)
     defense = db.Column(db.Integer, nullable=False)
     hp = db.Column(db.Integer, nullable=False)
+
+    caught_poke = db.relationship('User', 
+        secondary = 'catch_poke',
+        backref = 'caught_poke',
+        lazy = 'dynamic'
+            )                      
+
 
     def __init__(self, name, ability, base_exp, sprite, attack, defense, hp):
         self.name = name

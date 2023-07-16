@@ -20,9 +20,9 @@
 
         {% if poke %}
         <div id="pokecard" class="card" style="width: 18rem;">
-            <img src="{{poke.sprite}}" class="card-img-top" alt="...">
+            <img id="sprite" src="{{poke.sprite}}" class="card-img-top" alt="...">
             <div id="pokeinfo" class="card-body">
-                <h4 class="card-title">{{poke.species.capitalize()}}</h4>
+                <h4 class="card-title">{{poke.name.capitalize()}}</h4>
                 <p class="card-text">
 
                 <H6>Ability: {{poke.ability}}</H6>
@@ -32,7 +32,7 @@
                 <h6>Base HP: {{poke.hp}}</h6>
                 
                 </p>
-                <a href="#" class="btn btn-primary">Use Poke Ball!</a>
+                <a href="{{url_for('auth.add_to_team', pokemon = poke.id)}}" class="btn btn-primary">Use Poke Ball!</a>
             </div>
         </div>
         {% endif %}

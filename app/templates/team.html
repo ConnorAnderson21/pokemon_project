@@ -1,6 +1,38 @@
 {% extends 'index.html' %}
 {% block content %}
+
 <div class="container">
+    <div class="row justify-content-center">
+
+        {% for pok in team_list %}
+        <div id="pokecard" class="card" style="width: 18rem;">
+            <img src="{{pok.sprite}}" class="card-img-top" alt="...">
+            <div id="pokeinfo" class="card-body">
+                <h4 class="card-title">{{pok.name.capitalize()}}</h4>
+                <p class="card-text">
+
+                <H6>Ability: {{pok.ability}}</H6>
+                <h6>Base Experience: {{pok.base_exp}}</h6>
+                <h6>Attack: {{pok.attack}}</h6>
+                <h6>Defense: {{pok.defense}}</h6>
+                <h6>Base HP: {{pok.hp}}</h6>
+                
+                </p>
+                <a href="{{url_for('auth.release', pokemon=pok.id)}}" class="btn btn-primary">Release</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<!-- <div class="container">
     <div class="row justify-content-center">
 <table class="table table-dark table-hover">
     <thead>
@@ -19,6 +51,7 @@
             <th>HP</th>
         </tr>
         <tr>
+   
             <td></td>
             <td></td>
             <td></td>
@@ -33,5 +66,5 @@
 </div>
 
 
-</table>
+</table> -->
 {% endblock %}

@@ -2,13 +2,12 @@ body {
     background-image: url(images/battleground1.png);
     background-size: cover;
     background-repeat: no-repeat;
-    min-height:100%
-    
+    min-height: 100%
 }
 
 h1 {
     text-align: center;
-    color:  #ffcb05;
+    color: #ffcb05;
     background-color: #2a75bb;
 }
 
@@ -23,6 +22,7 @@ h1 {
 
 #sprite {
     
+
 }
 
 #pokecard {
@@ -35,10 +35,21 @@ h1 {
     background-color: whitesmoke;
 }
 
-.pageheader{
+.pageheader {
     text-align: center;
-    color:  #ffcb05;
+    color: #ffcb05;
     background-color: #2a75bb;
+
+}
+
+#battle_sprite {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
     
 }
 
+#trainercard {
+background-color: #2a75bb;
+color: #ffcb05;
+width: min-content;
+    }

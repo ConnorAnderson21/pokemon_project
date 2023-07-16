@@ -13,5 +13,17 @@ def home():
 
 @app.route('/team')
 def team():
-    return render_template('team.html')
+    team_list = current_user.catch_poke
+    return render_template('team.html', team_list=team_list)
 
+@app.route('/arena')
+def arena():
+    team_list = current_user.catch_poke
+    return render_template('arena.html', team_list=team_list)
+
+
+
+# @app.route('/team/')
+# def team():
+#     pokemon_list = current_user.catching.limit(6).all()
+#     return render_template('team.html', p_list=pokemon_list)
