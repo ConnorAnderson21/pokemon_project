@@ -59,6 +59,7 @@ class Pokemon (db.Model):
     attack = db.Column(db.Integer, nullable=False)
     defense = db.Column(db.Integer, nullable=False)
     hp = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Numeric(12,2))
 
     caught_poke = db.relationship('User', 
         secondary = 'catch_poke',
@@ -67,7 +68,7 @@ class Pokemon (db.Model):
             )                      
 
 
-    def __init__(self, name, ability, base_exp, sprite, attack, defense, hp):
+    def __init__(self, name, ability, base_exp, sprite, attack, defense, hp, price):
         self.name = name
         self.ability = ability
         self.base_exp = base_exp
@@ -75,12 +76,25 @@ class Pokemon (db.Model):
         self.attack = attack
         self.defense = defense
         self.hp = hp
+        self.price = price
 
     def save_pokemon(self):
         db.session.add(self)
         db.session.commit()
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'ability': self.ability,
+            'base_exp': self.base_exp,
+            'sprite': self.sprite,
+            'attack': self.attack,
+            'defense': self.defense,
+            'hp': self.hp,
+            'price': self.price
 
+        }
 
 
     
