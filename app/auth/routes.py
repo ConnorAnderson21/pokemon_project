@@ -48,6 +48,7 @@ def enterpokemon():
             attack=poke['attack'],
             defense=poke['defense'],
             hp=poke['hp']
+            
         )
         new_pokemon.save_pokemon()
         # save_pokemon(new_pokemon)

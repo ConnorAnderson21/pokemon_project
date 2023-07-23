@@ -68,7 +68,7 @@ class Pokemon (db.Model):
             )                      
 
 
-    def __init__(self, name, ability, base_exp, sprite, attack, defense, hp, price):
+    def __init__(self, name, ability, base_exp, sprite, attack, defense, hp):
         self.name = name
         self.ability = ability
         self.base_exp = base_exp
@@ -76,7 +76,8 @@ class Pokemon (db.Model):
         self.attack = attack
         self.defense = defense
         self.hp = hp
-        self.price = price
+        self.price = (base_exp) + hp + attack + defense 
+        
 
     def save_pokemon(self):
         db.session.add(self)
